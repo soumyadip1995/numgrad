@@ -53,11 +53,10 @@ from engine import Tensor, dot, relu, backward_graph
 l1 = np.random.randn(3,3).astype(np.float32)
 l2 = np.random.randn(3,3).astype(np.float32)
 
-
 def engine():
 
-	x = Tensor(np.random.randn(3,3).astype(np.float32))
-	W = Tensor(np.random.randn(3,3).astype(np.float32))
+	x = Tensor(l1)
+	W = Tensor(l2)
 	n1 = dot(x, W)
 	n2 = relu(n1)
 	backward_graph(n2)

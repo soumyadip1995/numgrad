@@ -10,11 +10,8 @@ class Tensor:
 
         if np.isscalar(data):
             data = np.ones(1)*data
-
         if type(data) !=np.ndarray:
             print("data should be of type np.ndarray or a scalar, but received {type(data)}")
-
-
         self.leaf = leaf
         self.prev = []
         self.backward_function = backward_function
@@ -28,7 +25,7 @@ class Tensor:
 
     def zero_grad(self):
         self.grad = np.zeros(self.data.shape)
-        
+
 
 # implement some operations
 
@@ -53,9 +50,6 @@ def relu(a):
         print("a needs to be a Tensor")
 
     def back_func(dy = 1):
-        if type(dy) != np.ndarray:
-            print("Error in constructing a tensor")
-
         a.grad[a.data > 0] += dy[a.data > 0]
     res = Tensor(np.maximum(a.data, 0), leaf=False, backward_function = back_func)
     res.prev.append(a)
@@ -84,3 +78,5 @@ def backward_graph(var):
     var.grad=np.ones(var.data.shape)
     for var in reversed(tsorted):
         var.backward()
+
+
