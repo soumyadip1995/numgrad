@@ -10,8 +10,10 @@ class Tensor:
 
         if np.isscalar(data):
             data = np.ones(1)*data
-        if not isinstance(data, np.ndarray):
-            raise ValueError(f'data should be of type "numpy.ndarray" or a scalar,but received {type(data)}')
+
+        if type(data) !=np.ndarray:
+            print("data should be of type np.ndarray or a scalar, but received {type(data)}")
+
 
         self.leaf = leaf
         self.prev = []
