@@ -15,6 +15,16 @@ print(x.grad, y.grad)
 
 ``` 
 
+#### Scalar values
 
+Some scalar computation. Not final
 
+``` 
+
+a = Tensor(-8.0)
+b = Tensor(2.0)
+c = add(a, b)
+d = relu(c)
+d.backward()
+print(a.grad, b.grad)
 
