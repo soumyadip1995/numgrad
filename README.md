@@ -31,10 +31,9 @@ print(out, d.data, tr)
 
 ``` 
 
-#### Scalar values
 
-Some scalar computation. Not final
 
+<<<<<<< HEAD
 ``` 
 
 a = Tensor(-8.0)
@@ -42,4 +41,6 @@ b = Tensor(2.0)
 c = add(a, b)
 d = backward_graph(c)
 print(c.data, a.grad, b.grad)
+=======
+>>>>>>> parent of ca8a96d... Readme.md updated. dc/da and dc/db needs more operations. Not Final.
 
