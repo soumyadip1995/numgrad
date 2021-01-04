@@ -20,18 +20,26 @@ class Tensor:
 
 
     def backward(self):
-        self.backward_function(dy=self.grad)
-        return ("Tensor array %r with grad", self.data, self.grad)
+        self.backward_function(dy = self.grad)
+        
 
     def zero_grad(self):
         self.grad = np.zeros(self.data.shape)
 
+    def __str__(self):
+        return "Tensor %r with grad %r" % (self.data, self.grad)
+
+
+    def mean(self):
+        div = Tensor(np.array([1/self.data.size]))
+        return div
 
 # implement some operations
 
 def add(a,b):
     if not (isinstance(a,Tensor) and isinstance(b,Tensor)):
         print("a, b needs to be a Tensor/scalar")
+
     def back_func(dy):
         b.grad += dy
         a.grad += dy
@@ -67,6 +75,31 @@ def relu(a):
     return res
 
 
+def mul(a,b):
+    if not (isinstance(a, Tensor) and isinstance(b, Tensor)):
+        print("a and b needs to be a Tensor/scalar")
+
+    def back_func(dy):
+        if np.isscalar(dy):
+            dy = np.ones(1)*dy
+        a.grad += np.multiply(dy,b.data)
+        b.grad += np.multiply(dy,a.data)
+    res = Tensor(np.multiply(a.data,b.data), leaf=False, backward_function=back_func)
+    res.prev.extend([a,b])
+    return res
+
+
+def sum(a):
+    if not (isinstance(a,Tensor)):
+        print('a needs to be a Tensor')
+    def back_func(dy = 1):
+        a.grad += np.ones(a.data.shape)*dy
+
+    res = Tensor(np.sum(a.data), leaf=False, backward_function = back_func)
+    res.prev.append(a)
+    return res
+
+
 def __topo_sort(var):
     vars_seen = set()
     top_sort = []
@@ -81,12 +114,13 @@ def __topo_sort(var):
     topo_sort_helper(var)
     return top_sort
 
+
 def backward_graph(var):
     if not isinstance(var,Tensor):
         print("var needs to be a Tensor instance")
     tsorted = __topo_sort(var)
 
-    var.grad=np.ones(var.data.shape)
+    var.grad = np.ones(var.data.shape)
     for var in reversed(tsorted):
         var.backward()
 
