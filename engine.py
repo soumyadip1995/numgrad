@@ -3,7 +3,7 @@ import torch
 from functools import partialmethod
 
 class Tensor:
-    def __init__(self, data, leaf = True, backward_function = None):
+    def __init__(self, data, _op = '', leaf = True, backward_function = None):
 
         if backward_function is None and not leaf:
             print("Non-leaf nodes require backward function %r" % data)
@@ -28,6 +28,17 @@ class Tensor:
 
 
 # implement some operations
+
+def add(a,b):
+    if not (isinstance(a,Tensor) and isinstance(b,Tensor)):
+        print("a, b needs to be a Tensor/scalar")
+    def back_func(dy):
+        b.grad += dy
+        a.grad += dy
+
+    res = Tensor(a.data + b.data, '+', leaf=False, backward_function = back_func)
+    res.prev.extend([a,b])
+    return res
 
 def dot(a, b):
     if not(isinstance(a, Tensor) and isinstance(b , Tensor)):
@@ -56,24 +67,24 @@ def relu(a):
     return res
 
 
-def __top_sort(var):
+def __topo_sort(var):
     vars_seen = set()
     top_sort = []
-    def top_sort_helper(vr):
+    def topo_sort_helper(vr):
         if (vr in vars_seen) or vr.leaf:
             pass
         else:
             vars_seen.add(vr)
             for pvar in vr.prev:
-                top_sort_helper(pvar)
+                topo_sort_helper(pvar)
             top_sort.append(vr)
-    top_sort_helper(var)
+    topo_sort_helper(var)
     return top_sort
 
 def backward_graph(var):
     if not isinstance(var,Tensor):
         print("var needs to be a Tensor instance")
-    tsorted = __top_sort(var)
+    tsorted = __topo_sort(var)
 
     var.grad=np.ones(var.data.shape)
     for var in reversed(tsorted):

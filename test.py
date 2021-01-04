@@ -2,7 +2,7 @@ import numpy as np
 import torch
 
 # from evcu import Variable, dot, relu, sumel, backward_graph
-from engine import Tensor, dot, relu, backward_graph
+from engine import Tensor, dot, relu, add, backward_graph
 
 
 
@@ -52,24 +52,32 @@ from engine import Tensor, dot, relu, backward_graph
 
 l1 = np.random.randn(3,3).astype(np.float32)
 l2 = np.random.randn(3,3).astype(np.float32)
+l3 = np.random.randn(3,3).astype(np.float32)
+
 
 def engine():
 
-	x = Tensor(l1)
-	W = Tensor(l2)
-	n1 = dot(x, W)
-	n2 = relu(n1)
-	backward_graph(n2)
-	return x.grad, W.grad
+    x = Tensor(l1)
+    W = Tensor(l2)
+    y = Tensor(l3)
+    n1 = dot(x, W)
+    n2 = relu(n1)
+    n3 = add(n2,y)
+    backward_graph(n3)
+    return x.grad, W.grad
 
 def pytorch():
 
-    x = torch.tensor(l1, requires_grad=True)
-    W = torch.tensor(l2, requires_grad=True)
+    x = torch.tensor(l1, requires_grad = True)
+    W = torch.tensor(l2, requires_grad = True)
+    y = torch.tensor(l3, requires_grad = True)
     output = x.matmul(W)
     output1 = output.relu()
-    output1.sum().backward()
-    return output.detach().numpy() , x.grad, W.grad
+    
+    output2 = output1.add(output1)
+    out3 = output2.sum()
+    out3.backward()
+    return out3.detach().numpy() , x.grad, W.grad
 
 
 for x,y in zip(engine(), pytorch()):
