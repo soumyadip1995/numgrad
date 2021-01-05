@@ -46,7 +46,7 @@ outm = mul(outadd, c)
 d = backward_graph(outm)
 print(outm.data, outm a.grad, b.grad)
 
-# dd/da and dd/db needs more operations. Not Final.
+# More operations for dd/da and dd/db will be supported
 
 
 ``` 
