@@ -44,7 +44,7 @@ def add(a,b):
         b.grad += dy
         a.grad += dy
 
-    res = Tensor(a.data + b.data, '+', leaf=False, backward_function = back_func)
+    res = Tensor(a.data + b.data, leaf=False, backward_function = back_func)
     res.prev.extend([a,b])
     return res
 
@@ -84,7 +84,7 @@ def mul(a,b):
             dy = np.ones(1)*dy
         a.grad += np.multiply(dy,b.data)
         b.grad += np.multiply(dy,a.data)
-    res = Tensor(np.multiply(a.data,b.data), leaf=False, backward_function=back_func)
+    res = Tensor(np.multiply(a.data,b.data),'*', leaf=False, backward_function=back_func)
     res.prev.extend([a,b])
     return res
 

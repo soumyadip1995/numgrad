@@ -33,16 +33,20 @@ print(out, d.data, tr)
 
 #### Scalar values
 
-some scalar computations. Not final.
+The input can either be a scalar or a np.ndarray , some scalar value computations included. Not final.
 
 
 ``` 
 
 a = Tensor(-8.0)
-b = Tensor(2.0)
-c = add(a, b)
-d = backward_graph(c)
-print(c.data, a.grad, b.grad) # dc/da and dc/db needs more operations. Not Final.
+b = Tensor(9.0)
+c = Tensor(-3.0)
+outadd = add(a, b)
+outm = mul(outadd, c) 
+d = backward_graph(outm)
+print(outm.data, outm a.grad, b.grad)
+
+# dd/da and dd/db needs more operations. Not Final.
 
 
 ``` 
