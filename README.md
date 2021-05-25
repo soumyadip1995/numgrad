@@ -2,6 +2,8 @@
 
 If torch is based on the Torch Tensor, then numgrad is based on the numpy array. A Tensor class wrapping the numpy array. If [karpathy/micrograd](https://github.com/karpathy/micrograd) provides support for scalar values and its gradients, numgrad provides support for both scalar values and matrices.
 
+Note- Not finished. NNs to be implemented.
+
 #### A few Examples
 
 A few examples have been provided below.
